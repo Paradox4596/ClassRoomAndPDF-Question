@@ -173,3 +173,61 @@ int main()
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
 
+2. 달팽이 배열을 만들어 봅시다. ( 5 x 5 )
+
+1 2 3 4 5
+16 17 18 6
+15 7
+14 8
+13 12 11 10 9
+
+----------------------------------------------------------------------------
+
+#include <iostream>
+
+int main()
+{
+
+const int SIZE{ 5 };
+int Array[SIZE][SIZE]{};
+
+// row 행 인덱스, col 열 인덱스
+int row{ 0 }, col{ -1 }, reverse{ 1 }, limit{ 0 }, tmp{ 1 };
+
+// 변 크기 점점 줄이기 빌드업
+for (int count = 1; count <= SIZE; count++)
+{
+	////행 고정, 열 증가, 배열에 숫자 증가
+	for (int colplus = 0; colplus < SIZE - limit; colplus++)
+	{
+		col += reverse;
+		Array[row][col] = tmp++;
+	}
+
+	// 사이즈 1칸 줄이기
+
+	limit++;
+
+	// 행 증가, 열 고정, 배열에 숫자 증가
+
+	for (int rowplus = 0; rowplus < SIZE - limit; rowplus++)
+	{
+		row += reverse;
+		Array[row][col] = tmp++;
+	}
+
+	// 역행 준비
+
+	reverse = -reverse;
+}
+
+for (int i = 0; i < SIZE; i++)
+{
+	for (int j = 0; j < SIZE; j++)
+	{
+		std::cout << Array[i][j] << ' ';
+	}
+	std::cout << std::endl;
+}
+
+}
