@@ -231,3 +231,60 @@ for (int i = 0; i < SIZE; i++)
 }
 
 }
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+3. 5x5 마방진을 만들어 봅시다.
+가로, 세로, 대각선의 합이 동일한 행렬을 마방진이라 합니다.
+시작은 1행의 가운데에서 출발
+우상단 (행 감소, 열 증가) 이동
+예외상황
+행이 0보다 작으면 -> 제일 마지막 행
+열이 너비보다 크면 -> 0열
+이동한 곳에 값이 들어 있으면, 이전값 바로 아래로
+
+----------------------------------------------------------------------------
+
+#include <iostream>
+
+int main()
+{
+	const int SIZE{ 5 };
+	int array[SIZE][SIZE]{};
+	int row{ 0 }, col{ 2 }, changeRow{}, changeCol{};
+
+	for (int i = 1; i <= SIZE*SIZE; i++)
+	{
+		array[row][col] =i;
+
+		changeRow = row--;
+		changeCol = col++;
+
+		if (row < 0)
+		{
+			row = 4;
+		}
+		
+		if (col > 4)
+		{
+			col = 0;
+		}
+
+		if (array[row][col] != 0)
+		{
+			row = ++changeRow;
+			col = changeCol;
+		}
+	}
+
+	
+	for (int i = 0; i < SIZE; i++)
+	{
+		for (int j = 0; j < SIZE; j++)
+		{
+			std::cout << array[i][j] << '\t';
+		}
+		std::cout << std::endl;
+	}
+}
