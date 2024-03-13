@@ -288,3 +288,200 @@ int main()
 		std::cout << std::endl;
 	}
 }
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+함수를 활용한 과제
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+1. 다음과 같이 설계된 몬스터를 만들어 봅시다.
+타입 : Wolf, Demon, Slime
+이름
+HP
+위 데이터들로 병든늑대(HP 10), 황천 늑대(HP 1000), 구덩이군주(HP 400)를 만들어 봅시다.
+
+----------------------------------------------------------------------------
+
+#include <iostream>
+
+struct Monster
+{
+	std::string type;
+	std::string name;
+	int HP;
+};
+
+Monster A{ "Wolf","병든늑대",10 };
+Monster B{ "Wolf","황천 늑대",1000 };
+Monster C{ "Demon","구덩이군주",400 };
+
+int main()
+{
+	char who;
+
+	while (1)
+	{
+		std::cout << "누구의 정보를 볼래? : ";
+		std::cin >> who;
+
+		switch (who)
+		{
+		case 'A':
+			std::cout << A.type << ' ' << A.name << ' ' << A.HP << std::endl;
+			break;
+
+		case 'B':
+			std::cout << B.type << ' ' << B.name << ' ' << B.HP << std::endl;
+			break;
+
+		case 'C':
+			std::cout << C.type << ' ' << C.name << ' ' << C.HP << std::endl;
+			break;
+
+		default: std::cout << "잘못 입력했음" << std::endl;
+			break;
+		}
+	}
+}
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+2. 숫자야구 게임을 만들어 보세요.
+
+정답이 456이라고 가정하면
+
+숫자를 입력하세요 : 123
+3 OUT
+숫자를 입력하세요 : 126
+1 STRIKE, 2 OUT
+숫자를 입력하세요 : 465
+1 STRIKE, 2 BALL
+.
+.
+.
+숫자를 입력하세요 : 456
+성공!!
+
+EXTRA)
+정답을 임의로 만들어 봅시다.
+(인터넷에 C++ 난수)
+중복되는 숫자는 제외 (777, 001 .. )
+
+----------------------------------------------------------------------------
+
+#include <iostream>
+#include <ctime>
+
+void CreateAnswer();
+void InputNumber(int A, int B, int C);
+
+int AnswerArray[3]{};
+int A{}, B{}, C{};
+
+
+int main()
+{
+	CreateAnswer();
+	
+	A = AnswerArray[0];
+	B = AnswerArray[1];
+	C = AnswerArray[2];
+
+	InputNumber(A,B,C);
+}
+
+void CreateAnswer()
+{
+	int usedDigit[10]{};
+
+	std::srand(std::time(nullptr));
+
+	for (int i = 0; i < 3; i++)
+	{
+		int randomDigit{};
+
+		while (1) // 무한 시행
+		{
+			randomDigit = std::rand() % 10; // 0~9 랜덤배정
+
+			if (usedDigit[randomDigit] == 0) // 랜덤디짓이 5일때.. useddigit[5]가 1로 바뀌며 
+			{								// 또 랜덤디짓이 5가 된다면 다시 주사위 굴리기
+				usedDigit[randomDigit] = 1;
+				break;
+			}
+		}
+		AnswerArray[i] = randomDigit;
+
+		// 정답 번호..!!
+		std::cout << randomDigit;
+	}
+
+	std::cout << std::endl;
+}
+
+void InputNumber(int A, int B, int C)
+{
+	while (1)
+	{
+		int a{}, b{}, c{};
+		std::cout << "숫자를 입력하세요 : ";
+		std::cin >> a >> b >> c;
+
+		int out{}, strike{}, ball{};
+		if (a == A)
+		{
+			strike++;
+		}
+		if (b == B)
+		{
+			strike++;
+		}
+		if (c == C)
+		{
+			strike++;
+		}
+		//
+		if (a == B || a == C)
+		{
+			ball++;
+		}
+		if (b == A || b == C)
+		{
+			ball++;
+		}
+		if (c == B || c == A)
+		{
+			ball++;
+		}
+		//
+		if (a != A && a != B && a != C)
+		{
+			out++;
+		}
+		if (b != A && b != B && b != C)
+		{
+			out++;
+		}
+		if (c != A && c != B && c != C)
+		{
+			out++;
+		}
+
+		if (strike == 3)
+		{
+			std::cout << "성공!!";
+
+			break;
+		}
+
+		std::cout << strike << " STRIKE, " << out << " OUT, " << ball << " BALL" << std::endl;
+	}
+
+}
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
