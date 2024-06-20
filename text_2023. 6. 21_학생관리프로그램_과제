@@ -1,0 +1,203 @@
+다음과 같이 출력하는 학생 관리 프로그램을 만들어 봅시다.
+
+학생 수를 입력하세요 : 5
+
+번호를 입력하세요 : 1
+이름을 입력하세요 : Doggy
+점수를 입력하세요 : 10
+
+번호를 입력하세요 : 2
+이름을 입력하세요 : kitty
+점수를 입력하세요 : 30
+
+.
+.
+
+
+1. 리스트 출력
+2. 총점
+3. 내림차순 정렬
+
+> 1
+1, Doggy, 10
+2, Kitty, 30
+
+1. 리스트 출력
+2. 총점
+3. 내림차순 정렬
+
+> 2
+총점 : ***
+
+1. 리스트 출력
+2. 총점
+3. 내림차순 정렬
+> 3
+
+Kitty 30
+Doggy 10
+.
+.
+.
+
+----------------------------------------------------------------------------
+
+#include <iostream>
+
+// 컴패리슨 비교
+using Comparison = bool (*)(int, int); // !!
+
+// 학생 구조체
+struct Student
+{
+	int sNum;
+	std::string sName;
+	int sScore;
+};
+
+// !! enum 열거형 (종료, 출력, 총점, 정렬)
+enum
+{
+	quit, print, total, sort
+};
+
+// 함수 - 학생수 입력
+// 함수 - (번호, 이름, 점수)  입력
+// 함수 - 리스트 출력
+// 함수 - 총점
+// 함수 - 정렬
+// 함수 - 오름차순
+// 함수 - 내림차순
+int InputStudentNum();
+void InputStudentData(Student* array, int size);
+void Print(Student* array, int size);
+int Total(Student* array, int size);
+void Sort(Student* array, int size, Comparison compare, int Student::* member);
+bool Asscending(int x, int y);
+bool Descending(int x, int y);
+
+// main
+// 학생수 , (번호, 이름, 점수)  입력
+int main()
+{
+	int studentNum = InputStudentNum();
+	Student* sArray{ new Student[studentNum]{} }; // !!
+
+	if (sArray) // !!
+	{
+		InputStudentData(sArray, studentNum);
+	}
+	// 무한반복
+	// (리스트 출력, 총점, 내림차순 정렬)
+	// 스위치 
+
+	while (1)
+	{
+		std::cout << "0. 종료" << std::endl
+			<< "1. 리스트 출력" << std::endl // !!
+			<< "2. 총점" << std::endl
+			<< "3. 점수 내림차순 정렬" << std::endl << std::endl
+			<< '>';
+
+		int choice{};
+		std::cin >> choice;
+
+		switch (choice)
+		{
+		case quit:
+			delete[] sArray;
+			return 0;
+		case print:
+			Sort(sArray, studentNum, Asscending, &Student::sNum);
+			Print(sArray, studentNum);
+			std::cout << std::endl;
+			break;
+		case total:
+			std::cout << "총점 : " << Total(sArray, studentNum) << std::endl;
+			std::cout << std::endl;
+			break;
+		case sort:
+			Sort(sArray, studentNum, Descending, &Student::sScore);
+			Print(sArray, studentNum);
+			std::cout << std::endl;
+			break;
+		default:
+			std::cout << "다시 입력하세요" << std::endl;
+		}
+	}
+}
+
+int InputStudentNum()
+{
+	int x{};
+	std::cout << "학생 수를 입력 : ";
+	std::cin >> x;
+	std::cout << std::endl;
+	return x;
+}
+
+void InputStudentData(Student* array, int size)
+{
+	for (int i{ 0 }; i < size; i++) // !!
+	{
+		std::cout << i + 1 << "번째 학생 번호 : ";
+		std::cin >> array[i].sNum;
+		std::cout << i + 1 << "번째 학생 이름 : ";
+		std::cin >> array[i].sName;
+		std::cout << i + 1 << "번째 학생 점수 : ";
+		std::cin >> array[i].sScore;
+		std::cout << std::endl;
+	}
+}
+
+void Print(Student* array, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << "[" << array[i].sNum << "] "
+			<< array[i].sName << ", "
+			<< array[i].sScore << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+int Total(Student* array, int size)
+{
+	int sum{};
+	for (int i{ 0 }; i  < size; i++)
+	{
+		sum += array[i].sScore;
+	}
+	std::cout << std::endl;
+	return sum;
+}
+
+void Sort(Student* array, int size, Comparison compare, int Student::* member)
+{
+	for (int i{}; i < size; i++) {
+		for (int j{ i + 1 }; j < size; j++) {
+			if (compare(array[i].*member, array[j].*member)) // !!
+			{
+				int tempNumber = array[i].sNum;
+				array[i].sNum = array[j].sNum;
+				array[j].sNum = tempNumber;
+				std::string tempName = array[i].sName;
+				array[i].sName = array[j].sName;
+				array[j].sName = tempName;
+				int tempScore = array[i].sScore;
+				array[i].sScore = array[j].sScore;
+				array[j].sScore = tempScore;
+			}
+		}
+	}
+}
+
+bool Asscending(int x, int y)
+{
+	return x > y;
+}
+
+bool Descending(int x, int y)
+{
+	return x < y;
+}
